@@ -15,13 +15,13 @@ class ExchangeEconomyClass:
         par.w2A = 0.3
 
     def utility_A(self,x1A,x2A):
-        pass
+        return x1A**self.par.alpha*x2A**(1-self.par.alpha)
 
     def utility_B(self,x1B,x2B):
-        pass
+        return x1A**self.par.beta*x2A**(1-self.par.beta)
 
     def demand_A(self,p1):
-        pass
+        return 
 
     def demand_B(self,p1):
         pass
