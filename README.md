@@ -1,8 +1,8 @@
 # \[Group name\]
 
 **Group members:**
-- sdfsdf 
-- sdfs 
+- Sylvester Pedersen
+- Marcus Honoré 
 
 This repository contains  
 1. Inaugural project. 
