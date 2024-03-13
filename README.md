@@ -1,9 +1,9 @@
 # \[Group name\]
 
 **Group members:**
-- A
-- B
-- C
+- Sylvester Pedersen
+- Marcus Honoré 
+
 
 This repository contains  
 1. Inaugural project. 
