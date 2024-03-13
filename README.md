@@ -1,4 +1,4 @@
-# \[Group name\]
+# \[KBH-HERNING]
 
 **Group members:**
 - Sylvester Pedersen
