@@ -38,7 +38,7 @@ class ExchangeEconomyClass:
 
     def check_market_clearing(self,p1):
 
-        par = self.par
+        par = self.parb
 
         x1A,x2A = self.demand_A(p1)
         x1B,x2B = self.demand_B(p1)
@@ -47,6 +47,10 @@ class ExchangeEconomyClass:
         eps2 = x2A-par.w2A + x2B-(1-par.w2A)
 
         return eps1,eps2
+    
+    def solve(self)
+        
+        
 
 
 # test 3 
