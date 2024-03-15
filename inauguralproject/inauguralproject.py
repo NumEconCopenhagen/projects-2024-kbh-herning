@@ -49,8 +49,7 @@ class ExchangeEconomyClass:
         return eps1,eps2
     
     def solve(self):
-        
-        
-
-
-# test 3 
+        # Indented block starts here
+        # Your code implementation here
+        pass  # Placeholder to indicate an empty method
+# No indentation beyond this point
