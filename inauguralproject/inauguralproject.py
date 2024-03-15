@@ -24,21 +24,25 @@ class ExchangeEconomyClass:
 
     def demand_A(self,p1):
         par = self.par
-        x1A = par.alpha * ((p1*par.w1A + par.w2A) / p1)
-        x2A = (1-par.alpha) * ((p1*par.w1A + par.w2A))
+        # x1A = par.alpha * ((p1*par.w1A + par.w2A) / p1)
+        x1A = [par.alpha * ((price * par.w1A + par.w2A) / price) for price in p1]
+        # x2A = (1-par.alpha) * ((p1*par.w1A + par.w2A))
+        x2A = [(1-par.alpha) * ((price * par.w1A + par.w2A)) for price in p1]
         return x1A, x2A
 
         
 
     def demand_B(self,p1):
         par = self.par
-        x1B = par.beta * ((p1*(1-par.w1A) + (1-par.w2A)) / p1)
-        x2B = (1-par.beta) * ((p1*par.w1A+par.w2A))
+        # x1B = par.beta * ((p1*(1-par.w1A) + (1-par.w2A)) / p1)
+        x1B = [par.beta * ((price * (1-par.w1A) + (1-par.w2A)) / price) for price in p1]
+        # x2B = (1-par.beta) * ((p1*par.w1A+par.w2A))
+        x2B = [(1-par.beta) * ((price * (1-par.w1A) + (1-par.w2A))) for price in p1]
         return x1B, x2B
 
     def check_market_clearing(self,p1):
 
-        par = self.parb
+        par = self.par
 
         x1A,x2A = self.demand_A(p1)
         x1B,x2B = self.demand_B(p1)
