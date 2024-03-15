@@ -48,7 +48,7 @@ class ExchangeEconomyClass:
 
         return eps1,eps2
     
-    def solve(self)
+    def solve(self):
         
         
 
