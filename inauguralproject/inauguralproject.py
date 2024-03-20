@@ -62,8 +62,8 @@ class ExchangeEconomyClass:
 
         par = self.par
 
-        x1A,x2A  = self.demand_A(p1)
-        x1B,x2B = self.demand_B(p1)
+        x1A  = self.demand_A(p1)
+        x1B = self.demand_B(p1)
 
         #a. demand
         demand = x1A + x1B 
@@ -78,8 +78,8 @@ class ExchangeEconomyClass:
     
     def excess_demand_x2(self, p1):
 
-        x1A,x2A  = self.demand_A(p1)
-        x1B,x2B = self.demand_B(p1)
+        x2A  = self.demand_A(p1)
+        x2B = self.demand_B(p1)
 
         #a. demand
         demand = x2A + x2B
@@ -146,11 +146,37 @@ class ExchangeEconomyClass:
 
         text = 'solution to market equilibrium:\n'
         text += f'p1 = {par.p1_star:5.3f}\n'
+        text += 'p2 = 1\n'
 
-        text += 'excess demand ar:\n'
+        text += 'excess demand are:\n'
         text += f'z1 = {par.z1}\n'
         text += f'z2= {par.z2}'
         print(text)
+    
+
+    def A_best_choice(N):
+
+        for i in range(N):
+            p1[i] = [0.5 + 2*(i / N)]
+
+            x1B[i],x2B[i] = self.demand_B(p1)
+
+            x1A_B[i] = 1-x1B
+            x2A_B [i]= 1-x2B
+
+            u_A[i] = self.utility_A(x1A_B, x2A_B)
+
+            if u_A[i] > u_A[i+1]:
+                p1_best = p1[i]
+                u_A_best = u_A[i]
+
+            
+        if do_print:
+            print_solution(u_A_best, p1_best)
+        
+        return u_A_best, p1_best
+
+
 
 
 
