@@ -62,8 +62,8 @@ class ExchangeEconomyClass:
 
         par = self.par
 
-        x1A  = self.demand_A(p1)
-        x1B = self.demand_B(p1)
+        x1A, x2A  = self.demand_A(p1)
+        x1B, x2B = self.demand_B(p1)
 
         #a. demand
         demand = x1A + x1B 
@@ -78,8 +78,8 @@ class ExchangeEconomyClass:
     
     def excess_demand_x2(self, p1):
 
-        x2A  = self.demand_A(p1)
-        x2B = self.demand_B(p1)
+        x1A, x2A = self.demand_A(p1)
+        x1B, x2B = self.demand_B(p1)
 
         #a. demand
         demand = x2A + x2B
@@ -154,31 +154,64 @@ class ExchangeEconomyClass:
         print(text)
     
 
-    def A_best_choice(N):
-
-        for i in range(N):
-            p1[i] = [0.5 + 2*(i / N)]
-
-            x1B[i],x2B[i] = self.demand_B(p1)
-
-            x1A_B[i] = 1-x1B
-            x2A_B [i]= 1-x2B
-
-            u_A[i] = self.utility_A(x1A_B, x2A_B)
-
-            if u_A[i] > u_A[i+1]:
-                p1_best = p1[i]
-                u_A_best = u_A[i]
-
-            
-        if do_print:
-            print_solution(u_A_best, p1_best)
+    def find_best_choice_test(self,N,do_print=True): # ,do_print=True
         
-        return u_A_best, p1_best
+        par = self.par
+        # a. allocate numpy arrays
+        shape_tuple = (N)
+        #p1 = np.empty(shape_tuple)
+        x1_values = np.empty(shape_tuple)
+        x2_values = np.empty(shape_tuple)
+        u_values = np.empty(shape_tuple)
+    
+        # b. start from guess of x1=x2=0
+        x1_best = 0
+        x2_best = 0
+        u_best = self.utility_A(0.001,0.001)
+    
+        # c. loop through all possibilities
+        for i in range(N):
+        
+            # p1[i] = (0.5 + 2*(i / N))
+            # i. x1
+            x1_values[i] = x1 = 1 - (par.beta * (((0.5 + 2*(i / N))*(1-par.w1A) + (1-par.w2A)) / (0.5 + 2*(i / N))))
+        
+            # ii. implied x2 by budget constraint
+            x2_values[i] = x2 = 1 - (1-par.beta) * (((0.5 + 2*(i / N))*(1-par.w1A)+(1-par.w2A)))
+            
+            # iii. utility    
+            u_values[i] = self.utility_A(x1_values[i],x2_values[i])
+        
+            if u_values[i] >= u_best:    
+                x1_best = x1_values[i]
+                x2_best = x2_values[i] 
+                u_best = u_values[i]
+                p1 = (0.5 + 2*(i / N))
+              
+
+        return x1_best,x2_best,u_best,p1 #,x1_values,x2_values,u_values
+
+    def find_best_choice_test_B(self): # ,do_print=True
+        
+        par = self.par
+        p1_val = np.linspace(0.01, 10.000, 10000)
+    
+        # c. loop through all possibilities
+        for p1 in p1_val:
+
+            x1B,x2B = self.demand_B(p1)
+
+            x1 = 1-x1B
+            x2 = 1-x2B
+            u_A_opt = self.utility_A(0.01,0.01)
+            p1_opt = 0
+            u_A = self.utility_A()
+
+            if u_A(par.x1,par.x2) > u_A_opt:
+                u_A_opt = u_A(x1,x2)
+                p1_opt = p1
 
 
-
-
-
+        return u_A_opt,p1_opt #,x1_values,x2_values,u_values
 
 
