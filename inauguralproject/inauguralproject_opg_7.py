@@ -1,7 +1,8 @@
 from types import SimpleNamespace
 import numpy as np
+import random
 
-class ExchangeEconomyClass:
+class ExchangeEconomyClass_opg_7:
 
     def __init__(self):
 
@@ -12,13 +13,28 @@ class ExchangeEconomyClass:
         par.beta = 2/3
 
         # b. endowments
-        par.w1A = 0.8
-        par.w2A = 0.3
+        # Define the number of values to generate
+        num_values = 50
+
+        # Generate 50 random values for w1A and w2A
+        par.w1A = np.random.uniform(0, 1, num_values)
+        par.w2A = np.random.uniform(0, 1, num_values)
+        # Initialize lists to store the values of w1A and w2A
+        # num_draws = 50
+        # par.w1A = []
+        # par.w2A = []
+
+        # Draw values for w1A and w2A and store them in the lists
+        # for _ in range(num_draws):
+            # par.w1A.append(random.uniform(0, 1))
+            # par.w2A.append(random.uniform(0, 1))
+
+
 
         # c. div
         par.eps = 1e-8 #tolerance 
         par.maxiter = 500 # iter
-        par.kappa = 0.1
+        par.kappa = 1
 
     def utility_A(self,x1A,x2A):
         par = self.par
@@ -107,16 +123,20 @@ class ExchangeEconomyClass:
             z1 = self.excess_demand_x1(p1)
 
             # 2. stop coomand
-            if np.abs(z1) < par.eps or t>=par.maxiter:
+            if (np.abs(z1) < par.eps).any() or t >= par.maxiter:
                 print(f'{t:3d}: p1={p1:12.8f} -> exess demand -> {z1:14.8f}')
                 break
             
             # 3. 
             if t<5 or t%25==0:
-                print(f'{t:3d}: p1={p1:12.8f} -> exess demand -> {z1:14.8f}')
-
-            elif t==5:
-                print('     ...')
+                # print(f'{t:3d}: p1={p1:12.8f} -> exess demand -> {z1:14.8f}')
+            # 3. Modify the print statement to print each element of z1 individually
+                print(f'{t:3d}: p1={p1:12.8f} -> excess demand ->', end=' ')
+                for z in z1.tolist():
+                    print(f'{z:14.8f}', end=' ')
+            print()  # Print a newline after printing all elements of z1
+            #elif t==5:
+                #print('     ...')
 
             # 4. 
             p1 = p1 + par.kappa*z1/N
@@ -140,6 +160,105 @@ class ExchangeEconomyClass:
         else:
             print('solution was not found')
     
+    def find_equilibrium_test(self, p1_guess):
+        par = self.par
+        t = 0
+        p1 = p1_guess
+        N = 2  # number of agents
+        
+
+       # loop
+        while True:
+            # 1. excess_demand
+            z1 = self.excess_demand_x1(p1)
+
+            # 2. stop command
+            if (np.abs(z1) < par.eps).any() or t >= par.maxiter:
+                print(f'{t:3d}: p1={p1:12.8f} -> excess demand -> {z1:14.8f}')
+                break
+            
+            #  3. Print excess demand at certain intervals
+            if t < 5 or t % 25 == 0:
+                print(f'{int(t):3d}: p1={p1:12.8f} -> excess demand ->', end=' ')
+                for z in z1.tolist():
+                    print(f'{z:14.8f}', end=' ')
+                print()  # Print a newline after printing all elements of z1
+
+            elif t == 5:
+                print('     ...')
+
+            # 4. Update price
+            p1 = p1 + par.kappa * z1 / N
+
+            # 5. Increment iteration count
+            t += 1 
+
+       # Check if solution is found
+        if np.abs(z1) < par.eps:
+            # store equilibrium
+            par.p1_star = p1
+            par.z1 = z1
+            par.z2 = self.excess_demand_x2(par.p1_star)
+
+            if not np.abs(par.z2) < par.eps:
+                print('the market for good 2 was not cleared')
+                print(f'z2={par.z2}')
+            
+        else:
+            print('solution was not found')
+
+    
+    def find_equilibrium_test_1(self, p1_guess):
+        par = self.par
+        t = 0
+        p1 = p1_guess
+        N = 2  # number of agents
+
+        # loop
+        while True:
+            # 1. excess_demand
+            z1 = self.excess_demand_x1(p1)
+
+            # 2. stop command
+            if (np.abs(z1) < par.eps).any() or t >= par.maxiter:
+                print(f'{int(t):3d}: p1={p1:12.8f} -> excess demand ->', end=' ')
+                for z in z1:
+                    print(f'{z:14.8f}', end=' ')
+                print()
+                break
+
+            # 3. Print excess demand at certain intervals
+            if t < 5 or t % 25 == 0:
+                print(f'{int(t):3d}: p1={p1:12.8f} -> excess demand ->', end=' ')
+                for z in z1:
+                    print(f'{z:14.8f}', end=' ')
+                print()  # Print a newline after printing all elements of z1
+
+            elif t == 5:
+                print('     ...')
+
+            # 4. Update price
+            p1 = p1 + par.kappa * z1 / N
+
+            # 5. Increment iteration count
+            t += 1
+
+        # Check if solution is found
+        if np.abs(z1) < par.eps:
+            # store equilibrium
+            par.p1_star = p1
+            par.z1 = z1
+            par.z2 = self.excess_demand_x2(par.p1_star)
+
+            if not np.abs(par.z2) < par.eps:
+                print('the market for good 2 was not cleared')
+                print(f'z2={par.z2}')
+        else:
+            print('solution was not found')
+
+
+
+    
     def print_solution(self):
 
         par = self.par
@@ -158,7 +277,7 @@ class ExchangeEconomyClass:
         
         par = self.par
         # a. allocate numpy arrays
-        shape_tuple = (N)
+        # shape_tuple = (N)
         #p1 = np.empty(shape_tuple)
         x1_values = np.empty(shape_tuple)
         x2_values = np.empty(shape_tuple)
@@ -342,9 +461,5 @@ class ExchangeEconomyClass:
 
         return x1A_opt, x2A_opt
     
-    def opgave_6_B(self):
-        par = self.par
-
-        # x1 and x2 opgave 3
         
     

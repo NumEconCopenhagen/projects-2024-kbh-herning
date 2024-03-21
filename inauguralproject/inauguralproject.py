@@ -18,7 +18,7 @@ class ExchangeEconomyClass:
         # c. div
         par.eps = 1e-8 #tolerance 
         par.maxiter = 500 # iter
-        par.kappa = 0.1
+        par.kappa = 1 # 0.1
 
     def utility_A(self,x1A,x2A):
         par = self.par
@@ -342,9 +342,4 @@ class ExchangeEconomyClass:
 
         return x1A_opt, x2A_opt
     
-    def opgave_6_B(self):
-        par = self.par
-
-        # x1 and x2 opgave 3
-        
     
