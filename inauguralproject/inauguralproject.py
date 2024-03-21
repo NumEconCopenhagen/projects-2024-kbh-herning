@@ -194,7 +194,7 @@ class ExchangeEconomyClass:
     def find_best_choice_test_B(self): # ,do_print=True
         
         par = self.par
-        p1_val = np.linspace(0.01, 10.000, 10000)
+        p1_val = np.linspace(0.001, 10.000, 10000)
     
         # c. loop through all possibilities
         for p1 in p1_val:
@@ -212,6 +212,32 @@ class ExchangeEconomyClass:
                 p1_opt = p1
 
 
-        return u_A_opt,p1_opt #,x1_values,x2_values,u_values
+        return u_A_opt,p1_opt
 
 
+    def find_best_choice_test_B_1(self): 
+        par = self.par
+        p1_val = np.linspace(0.001, 10.000, 100000)
+        
+        # Initialize variables to store the optimal utility and price
+        u_A_opt = 0 
+        p1_opt = 0
+        
+        # Loop through all possibilities of p1
+        for p1 in p1_val:
+            # Calculate demand for good B given p1
+            x1B, x2B = self.demand_B(p1)
+            
+            # Calculate x1 and x2 for agent A
+            x1 = 1 - x1B
+            x2 = 1 - x2B
+            
+            # Calculate utility for agent A given x1 and x2
+            u_A = self.utility_A(x1, x2)
+            
+            # Update optimal utility and price if current utility is higher
+            if u_A > u_A_opt:
+                u_A_opt = u_A
+                p1_opt = p1
+
+        return u_A_opt, p1_opt
