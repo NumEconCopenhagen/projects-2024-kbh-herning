@@ -6,15 +6,14 @@ def define_symbols():
     L = sm.symbols('L')
     M = sm.symbols('M')
     pi = sm.symbols('pi')
-    L = sm.symbols('L')
     c_1 = sm.symbols('c_1')
     c_2 = sm.symbols('c_2')
     lam = sm.symbols('lambda')
     v_overline = sm.symbols(r'\overline{v}')
     v = sm.Function('v')
-    return L, M, pi, L, c_1, c_2, lam, v_overline, v
+    return L, M, pi, c_1, c_2, lam, v_overline, v
 
-def calculate_derivatives(c_1, c_2, v, M, pi, L, v_overline, lam):
+def calculate_derivatives(L, M, pi, c_1, c_2, lam, v_overline, v):
     # We define v differentiated with respect to respectively c_1 and c_2
     v_diff_c1 = sm.diff(v(c_1), c_1)
     v_diff_c2 = sm.diff(v(c_2), c_2)
