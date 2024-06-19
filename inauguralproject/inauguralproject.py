@@ -141,6 +141,8 @@ class ExchangeEconomyClass:
             
         else:
             print('solution was not found')
+
+        
     
     def print_solution(self):
 
@@ -182,6 +184,9 @@ class ExchangeEconomyClass:
             # ii. implied x2 by budget constraint
             x2_values[i] = x2 = 1 - (1-par.beta) * (((0.5 + 2*(i / N))*(1-par.w1A)+(1-par.w2A)))
             
+            if x1_values[i] < 0 or x2_values[i] < 0:
+                continue 
+
             # iii. utility    
             u_values[i] = self.utility_A(x1_values[i],x2_values[i])
         
@@ -338,6 +343,44 @@ class ExchangeEconomyClass:
 
         return u_A_opt, x1A_opt, x2A_opt
     
+    # 5.b
+    def opgave_5_B_solver(self):
+        par = self.par
+
+        # Initial utility for B at the initial endowment
+        u_B_initial = self.utility_B(1 - par.w1A, 1 - par.w2A)
+        
+        # Objective function to minimize (negative utility of A)
+        def objective(x):
+            x1A, x2A = x
+            return -self.utility_A(x1A, x2A)
+
+        # Constraint: B's utility must be at least as high as the initial utility
+        def constraint(x):
+            x1A, x2A = x
+            x1B = 1 - x1A
+            x2B = 1 - x2A
+            return self.utility_B(x1B, x2B) - u_B_initial
+
+        # Initial guess for x1A and x2A
+        x0 = [0.5, 0.5]
+        
+        # Bounds for x1A and x2A (between 0 and 1)
+        bounds = [(0, 1), (0, 1)]
+        
+        # Constraint dictionary
+        con = {'type': 'ineq', 'fun': constraint}
+
+        # Use scipy.optimize.minimize to find the optimal allocation
+        result = optimize.minimize(objective, x0, bounds=bounds, constraints=[con], tol=par.eps)
+        
+        if result.success:
+            x1A_opt, x2A_opt = result.x
+            u_A_opt = self.utility_A(x1A_opt, x2A_opt)
+            return u_A_opt, x1A_opt, x2A_opt
+        else:
+            raise RuntimeError("Optimization failed to find a solution")
+
     def opgave_6_A(self): 
         par = self.par
         x1A_val = np.linspace(0.0, 1.0, 5000)
@@ -371,5 +414,71 @@ class ExchangeEconomyClass:
                     u_initial = social_u
 
         return x1A_opt, x2A_opt
+    
+    #3.
+    def find_equilibrium_8(self,p1_guess):
+        
+        par = self.par
+        par.w1A = w1A_values
+        par.w2A = w2A_values
+        
+        t=0
+        p1 = p1_guess
+        N = 2 # number of agents
+
+        # loop
+        while True:
+
+            # 1. excess_demand
+            z1 = self.excess_demand_x1(p1)
+
+            # 2. stop coomand
+            if np.abs(z1) < par.eps or t>=par.maxiter:
+                print(f'{t:3d}: p1={p1:12.8f} -> exess demand -> {z1:14.8f}')
+                break
+            
+            # 3. 
+            if t<5 or t%25==0:
+                print(f'{t:3d}: p1={p1:12.8f} -> exess demand -> {z1:14.8f}')
+
+            elif t==5:
+                print('     ...')
+
+            # 4. 
+            p1 = p1 + par.kappa*z1/N
+
+            # 5. 
+            t += 1 
+
+        # Checjk if solution is found 
+        if np.abs(z1) < par.eps:
+            
+            # store eguilibrium
+            par.p1_star = p1 
+
+            par.z1 = z1
+            par.z2 = self.excess_demand_x2(par.p1_star)
+
+            if not np.abs(par.z2) < par.eps: 
+                print('the market for good 2 was not cleared')
+                print(f'z2={par.z2}')
+            
+        else:
+            print('solution was not found')
+
+        
+    
+    def print_solution_8(self):
+
+        par = self.par
+
+        text = 'solution to market equilibrium:\n'
+        text += f'p1 = {par.p1_star:5.3f}\n'
+        text += 'p2 = 1\n'
+
+        text += 'excess demand are:\n'
+        text += f'z1 = {par.z1}\n'
+        text += f'z2= {par.z2}'
+        print(text)
     
     
