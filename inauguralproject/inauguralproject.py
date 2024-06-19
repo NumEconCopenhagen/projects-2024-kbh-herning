@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 import numpy as np
+from scipy import optimize
 
 class ExchangeEconomyClass:
 
@@ -92,6 +93,7 @@ class ExchangeEconomyClass:
 
         return excess_demand
     
+    #3.
     def find_equilibrium(self,p1_guess):
         
         par = self.par
@@ -154,6 +156,7 @@ class ExchangeEconomyClass:
         print(text)
     
 
+    #4.a
     def find_best_choice_test(self,N,do_print=True): # ,do_print=True
         
         par = self.par
@@ -165,9 +168,9 @@ class ExchangeEconomyClass:
         u_values = np.empty(shape_tuple)
     
         # b. start from guess of x1=x2=0
-        x1_best = 0
-        x2_best = 0
-        u_best = self.utility_A(0.001,0.001)
+        x1_best = 0.01
+        x2_best = 0.01
+        u_best = self.utility_A(0.1,0.1)
     
         # c. loop through all possibilities
         for i in range(N):
@@ -191,6 +194,7 @@ class ExchangeEconomyClass:
 
         return x1_best,x2_best,u_best,p1 #,x1_values,x2_values,u_values
 
+    
     def find_best_choice_test_B(self): # ,do_print=True
         
         par = self.par
@@ -214,7 +218,7 @@ class ExchangeEconomyClass:
 
         return u_A_opt,p1_opt
 
-
+    #4.b loop
     def find_best_choice_test_B_1(self): 
         par = self.par
         p1_val = np.linspace(0.001, 10.000, 100000)
@@ -240,9 +244,35 @@ class ExchangeEconomyClass:
                 u_A_opt = u_A
                 p1_opt = p1
 
-        return u_A_opt, p1_opt
+        return x1, x2, u_A_opt, p1_opt
     
 
+    # 4.b using solver 
+    def find_best_choice_any_price(self):
+        par = self.par
+        
+        # Objective function to minimize (negative utility)
+        def objective(p1):
+            x1B, x2B = self.demand_B(p1)
+            x1A, x2A = 1 - x1B, 1 - x2B
+            return -self.utility_A(x1A, x2A)
+        
+        # Initial guess for p1
+        p1_guess = 1.0
+        
+        # Use scipy.optimize.minimize to find the optimal p1
+        result = optimize.minimize(objective, p1_guess, bounds=[(1e-8, None)], tol=par.eps)
+        
+        if result.success:
+            optimal_p1 = result.x[0]
+            x1B, x2B = self.demand_B(optimal_p1)
+            x1A, x2A = 1 - x1B, 1 - x2B
+            uA = self.utility_A(x1A, x2A)
+            return x1A, x2A, uA, optimal_p1
+        else:
+            raise RuntimeError("Optimization failed to find a solution")
+
+    
     def opgave_5_A(self): 
         par = self.par
         x1A_val = np.linspace(0.0, 1.0, 76)
