@@ -414,3 +414,45 @@ class ExchangeEconomyClass:
                     u_initial = social_u
 
         return x1A_opt, x2A_opt
+    
+    def check_market_clearing2(self, p1):
+        par = self.par
+
+        x1A, x2A = self.demand_A(p1)
+        x1B, x2B = self.demand_B(p1)
+
+        eps1 = x1A - par.w1A + x1B - (1 - par.w1A)
+        eps2 = x2A - par.w2A + x2B - (1 - par.w2A)
+
+        return eps1, eps2
+
+    def excess_demand_x1(self, p1):
+        par = self.par
+
+        x1A, x2A = self.demand_A(p1)
+        x1B, x2B = self.demand_B(p1)
+
+        # a. demand
+        demand = x1A + x1B
+
+        # b. supply
+        supply = 1
+
+        # c. excess demand
+        excess_demand = demand - supply
+
+        return excess_demand
+
+    def find_best_price(self, price_range):
+        best_price = None
+        min_excess_demand = float('inf')
+
+        for p1 in price_range:
+            eps1, eps2 = self.check_market_clearing(p1)
+            excess_demand = np.abs(eps1) + np.abs(eps2)  # Total excess demand
+
+            if excess_demand < min_excess_demand:
+                min_excess_demand = excess_demand
+                best_price = p1
+
+        return best_price, min_excess_demand
