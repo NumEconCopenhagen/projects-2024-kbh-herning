@@ -2,7 +2,7 @@ from types import SimpleNamespace
 import numpy as np
 from scipy import optimize
 
-class ExchangeEconomyClass:
+class ProductEconomyClass:
 
     def __init__(self):
 
