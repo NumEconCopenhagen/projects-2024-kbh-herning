@@ -16,6 +16,12 @@
 4. Dataset containing exchange rates between Canadian Dollar and US Dollar (*https://fred.stlouisfed.org/series/AEXCAUS*)
 5. Dataset containing exchange rates between US Dollar and UK Pound Sterling (*https://fred.stlouisfed.org/series/AEXUSUK*)
 
+contains 
+
+1. dataproject.py file relates to code used in dataproject 
+
+The **results** of the project can be seen from running [dataproject.ipynb](dataproject_2024.ipynb).
+
 **Dependencies:** Apart from a standard Anaconda Python 3 installation, the project requires the following installations:
 
 ``pip install matplotlib-venn``

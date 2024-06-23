@@ -8,6 +8,10 @@ In the principal agent problem we have a principal(insurance company) who offers
 
 We will setup and solve the model analytically and numerically. We will also extend the model to include selvrisk for the agent, and see how this changes the outcome of the maximization problem. 
 
+contains 
+
+1. modelproject.py file relates to code used in modelproject
+
 The **results** of the project can be seen from running [modelproject.ipynb](modelproject.ipynb).
 
 **Dependencies:** Apart from a standard Anaconda Python 3 installation, the project requires no further packages.
