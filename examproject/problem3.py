@@ -68,7 +68,7 @@ def plot_points_and_triangles(X, y, A, B, C, D):
     plt.grid(True)
     plt.show()
 
-plot_points_and_triangles(X, y, A, B, C, D)
+#plot_points_and_triangles(X, y, A, B, C, D)
 
 
 ####Question2
